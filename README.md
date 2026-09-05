@@ -32,15 +32,15 @@ Data lives only in memory — restarting the server resets it back to 3 example 
 | POST   | `/reset`          | Reset to the 3 example tasks (extra)  | 200     | –             |
 
 ## Sample curl output
-![alt text](<Screenshot 2026-09-04 223530.png>)
-![alt text](<Screenshot 2026-09-04 222202.png>)
+![alt text](<screenshots/Screenshot 2026-09-04 223530.png>)
+![alt text](<screenshots/Screenshot 2026-09-04 222202.png>)
 
 ## Swagger screenshot
-![Creating a task via POST /tasks](<Screenshot 2026-09-04 215856.png>)
+![Creating a task via POST /tasks](<screenshots/Screenshot 2026-09-04 215856.png>)
 
 Full CRUD cycle confirmed via Swagger — task created, appears in the list, then deleted:
-![List after creation](<Screenshot 2026-09-04 220320.png>)
-![List after deletion](<Screenshot 2026-09-04 221042.png>)
+![List after creation](<screenshots/Screenshot 2026-09-04 220320.png>)
+![List after deletion](<screenshots/Screenshot 2026-09-04 221042.png>)
 
 ## The mortality experiment
 
@@ -62,22 +62,22 @@ It reused a single Pydantic model (TodoCreate) for both creating and updating ta
 sending an empty body returns FastAPI's default `422` with a `{"detail": [...]}` 
 error shape — not `400` or my `{"error": "..."}` format:
 
-![AI version returns 422 instead of 400](<Screenshot ai-422-bug.png>)
+![AI version returns 422 instead of 400](<screenshots/Screenshot ai-422-bug.png>)
 
 2. **A real data-corruption bug in PUT.** Because it reused the same model 
 (with `completed` defaulting to `False`) for updates, sending 
 `{"title": "done task again"}` without `completed` silently reset a task's 
 `completed` status back to `false` — even though it had just been marked `true`:
 
-![completed silently resets to false on partial PUT](<Screenshot ai-put-bug.png>)
+![completed silently resets to false on partial PUT](<screenshots/Screenshot ai-put-bug.png>)
 
 3. **Missing endpoints.** My version has 9 endpoints total — the 5 CRUD 
 routes plus `GET /` (API info), `GET /health`, `GET /stats`, and 
 `POST /reset`. The AI's version only implemented the 5 CRUD routes and 
 nothing else, since my prompt never mentioned the extras.
 
-![my version](<Screenshot my-version.png>)
-![ai version](<Screenshot ai-version.png>)
+![my version](<screenshots/Screenshot my-version.png>)
+![ai version](<screenshots/Screenshot ai-version.png>)
 
 4. **Different naming.** It used `/todos` and `completed` instead of my 
 `/tasks` and `done` — not wrong, just a different vocabulary since I never 
@@ -89,5 +89,3 @@ The exact error response JSON shape ({"error": "..."} vs FastAPI's default)
 That partial updates shouldn't reset unmentioned fields
 Endpoint and field names
 The / and /health endpoints
-
-
